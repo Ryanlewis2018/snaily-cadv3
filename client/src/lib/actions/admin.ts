@@ -13,6 +13,8 @@ import {
   UN_BAN_MEMBER,
   ACCEPT_USER,
   DECLINE_USER,
+  GET_PENAL_CODES,
+  UPDATE_PENAL_CODES,
   UPDATE_CAD_SETTINGS,
 } from "../types";
 import lang from "../../language.json";
@@ -20,6 +22,7 @@ import Logger from "../Logger";
 import Company from "../../interfaces/Company";
 import Citizen from "../../interfaces/Citizen";
 import User from "../../interfaces/User";
+import Penal_code from "../../interfaces/Penal_code";
 import socket from "../socket";
 import Message from "../../interfaces/Message";
 
@@ -262,5 +265,20 @@ export const updateCadSettings = (data: {
     }
   } catch (e) {
     Logger.error(UPDATE_CAD_SETTINGS, e);
+  }
+};
+
+export const getPenalCodes = () => async (dispatch: Dispatch<IDispatch>) => {
+  try {
+    const res = await handleRequest("/admin/management/penal_code", "GET");
+
+    if (isSuccess(res)) {
+      dispatch({
+        type: GET_PENAL_CODES,
+        penal_code: res.data.penal_code,
+      });
+    }
+  } catch (e) {
+    Logger.error(GET_PENAL_CODES, e);
   }
 };

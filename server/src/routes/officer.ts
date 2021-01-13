@@ -2,7 +2,7 @@ import { NextFunction, Response, Router } from "express";
 import { processQuery } from "../lib/database";
 import { useAuth } from "../hooks";
 import { v4 as uuidv4 } from "uuid";
-import penalCodes from "../data/penal-codes";
+//import penalCodes from "../data/penal-codes";
 import IRequest from "../interfaces/IRequest";
 const router: Router = Router();
 
@@ -10,7 +10,26 @@ router.get(
   "/penal-codes",
   useAuth,
   useOfficerAuth,
-  (_req: IRequest, res: Response) => {
+  async(req: IRequest, res: Response) => {
+	 const penalCodes = await processQuery(
+      "SELECT * FROM `penal_codes`"
+    );
+    return res.json({ penalCodes, status: "success" });
+  }
+);
+
+router.post(
+  "/penal-codes/:id",
+  useAuth,
+  useOfficerAuth,
+  async(req: IRequest, res: Response) => {
+	const { id } = req.params;
+	const { title, des } = req.body;
+    await processQuery("update `penal_codes`` SET `title` = ?, `des` = ?  WHERE `id` = ? set", [title, des, id]);
+
+    const penalCodes = await processQuery(
+      "SELECT * FROM `penal_codes`"
+    );
     return res.json({ penalCodes, status: "success" });
   }
 );

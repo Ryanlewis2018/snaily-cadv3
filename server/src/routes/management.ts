@@ -178,4 +178,13 @@ router.delete("/companies/:id", useAuth, useAdminAuth, async (req: IRequest, res
   return res.json({ companies, status: "success" });
 });
 
+/*penal codes */
+router.get("/penal_code", useAuth, useAdminAuth, async (_req: IRequest, res: Response) => {
+  const members = await processQuery(
+    "SELECT *  FROM `penal_codes`"
+  );
+
+  return res.json({ status: "success", members });
+});
+
 export default router;
